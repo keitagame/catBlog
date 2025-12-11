@@ -36,3 +36,5 @@ def post(slug):
     parser = SimpleMarkdown(text)
     html = parser.parse()
     return render_template("post.html", content=html)
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0', port=5000)
