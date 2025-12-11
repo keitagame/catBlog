@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <style>
    body { margin: 0; padding:0;
-background:rgb(255, 255, 255);
+background:rgb(239, 239, 239);
 }
     .navbar {
 display:flex;
@@ -67,21 +67,28 @@ color:#ffffff;
 background:black;
 }
 .title{
-    margin:10px;
+    margin-right:10px;
+    margin-top:10px;
+    margin-bottom:10px;
     border-bottom:3px solid #007f9c;
-    padding:5px;
+    padding-top:5px;
+     padding-bottom:5px;
+      padding-right:5px;
+       padding-left:5px;
     font-size:1.6em;
 }
 .date{
     font-weight:400;
     margin-bottom:-13px;
-    padding-left:5px;
-    margin-left:10px;
+   padding-top:5px;
+     padding-bottom:5px;
+      padding-right:5px;
+       padding-left:0px;
     font-size:15px;
 }
 .tags{
 display:flex;
-margin-left:5px;
+margin-left:0px;
 }
 
 .tag{
@@ -98,7 +105,10 @@ padding-bottom:5px;
 background:#007f9c;
 }
 .honbun{
-margin:10px;
+    display:block;
+    padding:20px;
+background:white;
+margin:20px;
 }
 .sc{
 padding:5px;
@@ -150,6 +160,8 @@ code{
     
     border-radius:10px;
 }
+
+
   </style>
 </head>
 <body>
@@ -165,10 +177,12 @@ code{
   <div class="con">
     <h1>【開発中】CatBLOG</h1>
   </div>
-  <h3 class="date">2025/12/11</h3>
+ 
+   <div class="honbun">
+    <h3 class="date">2025/12/11</h3>
   <h1 class="title">ブログを始めた</h1>
   <div class="tags"><div class="tag">ウェルカム</div><div class="tag">開発</div><div class="tag">公式ブログ</div></div>
-  <div class="honbun">
+ 
 <div class="text">こんにちは</div>
 <div class="text">こんにちは</div>
 <h1 class="sc">こんにちは</h1>
@@ -182,11 +196,13 @@ code{
 <div class="text">コードブロック</div>
 <pre><code class="language-javascript">console.log("a");
     while(true){
-        
+
     }
 </code></pre>
+  </div>
+
 </div>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 
 <script>hljs.highlightAll();</script>
