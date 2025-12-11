@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta imgsrc="logo.svg" alt="Frank Dev Community Logo">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>catBLOG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+   body { margin: 0; padding:0;
+background:rgb(255, 255, 255);
+}
+    .navbar {
+display:flex;
+       
+      background: #000000;
+         align-items: center; 
+      border-bottom:1px solid #464646;
+    }
+    .navbar a{
+        
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+       font-weight:600;
+    }
+   .navbar .active {
+    
+margin-top:2px;
+padding:1em 0em;
+align-items: center;
+       border-bottom:4px solid rgb(255, 255, 255);
+      display:flex;
+       
+    }
+.navbar div{
+width:30px;
+}
+    .navbar img{
+    margin-left: 30px;
+margin-right:50px;
+    margin-bottom:0px;
+        margin-top:2px;
+    }
+
+    .con{
+        background:#272727;
+    }
+   .con h1{
+font-family: "Raleway", sans-serif;
+  
+  color:white;
+    font-size:1em;
+    margin:0px;
+    padding:10px;
+    background:#292929;
+   font-weight:600;
+   }
+.input{
+    outline:none;
+padding:12px;
+border:1px solid #323232;
+color:#ffffff;
+background:black;
+}
+.title{
+    margin:10px;
+    border-bottom:3px solid #007f9c;
+    padding:5px;
+    font-size:1.6em;
+}
+.date{
+    font-weight:400;
+    margin-bottom:-13px;
+    padding-left:5px;
+    margin-left:10px;
+    font-size:15px;
+}
+.tags{
+display:flex;
+margin-left:5px;
+}
+
+.tag{
+color:white;
+margin-left:5px;
+border-radius:50px;
+width:fit-content;
+font-weight:800;
+font-size:12px;
+padding-left:10px;
+padding-right:10px;
+padding-top:5px;
+padding-bottom:5px;
+background:#007f9c;
+}
+.honbun{
+margin:10px;
+}
+.sc{
+padding:5px;
+border-left:10px solid #007f9c;
+font-size:25px;
+margin-top: 10px;
+margin-bottom:10px;
+}
+.sc2{
+padding:5px;
+font-weight:400;
+border-bottom:2px solid #007f9c;
+font-size:20px;
+margin-top: 10px;
+margin-bottom:10px;
+}
+.mo{
+
+
+padding-left:15px;
+padding-top:5px;
+padding-bottom:5px;
+padding-right:5px;
+color:white;
+}
+.mokuzi{
+margin-top:30px;
+margin-bottom:30px;
+background:#e1e9e8;
+
+}
+.moz{
+font-weight:600;
+padding-left:15px;
+padding-top:5px;
+padding-bottom:5px;
+padding-right:5px;
+}
+.momo{
+padding-left:35px;
+padding-top:5px;
+padding-bottom:5px;
+padding-right:5px;
+}
+pre{
+    border-radius:10px;
+}
+code{
+    
+    border-radius:10px;
+}
+  </style>
+</head>
+<body>
+<div class="navbar">
+    <img src="logo.svg" width="50em" height="50em"/>
+    <div></div>
+    <a href="#" class="active">ホーム</a>
+    <a href="#about">概要</a>
+    <a href="#services">サービス</a>
+    <a href="#contact">お問い合わせ</a>
+    <input class="input" placeholder="サイト検索"/>
+  </div>
+  <div class="con">
+    <h1>【開発中】CatBLOG</h1>
+  </div>
+  <h3 class="date">2025/12/11</h3>
+  <h1 class="title">ブログを始めた</h1>
+  <div class="tags"><div class="tag">ウェルカム</div><div class="tag">開発</div><div class="tag">公式ブログ</div></div>
+  <div class="honbun">
+<div class="markdown-body">{{ content|safe }}</div>
+</div>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+<script>hljs.highlightAll();</script>
+</body>
+</html>
