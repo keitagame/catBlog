@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>記事表示 - CatBLOG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
+  <style>
+   body { margin: 0; padding:0; background:rgb(255, 255, 255); font-family: "Raleway", sans-serif; }
+    .navbar { display:flex; background: #000000; align-items: center; border-bottom:1px solid #464646; }
+    .navbar a{ color: white; text-decoration: none; margin: 0 1rem; font-weight:600; }
+    .navbar .active { margin-top:2px; padding:1em 0em; border-bottom:4px solid rgb(255, 255, 255); display:flex; }
+    .navbar div{ width:30px; }
+    .navbar img{ margin-left: 30px; margin-right:50px; margin-bottom:0px; margin-top:2px; }
+    .con{ background:#272727; }
+    .con h1{ color:white; font-size:1em; margin:0px; padding:10px; background:#292929; font-weight:600; }
+    .container { max-width: 900px; margin: 30px auto; padding: 20px; }
+    .title{ margin:10px; border-bottom:3px solid #007f9c; padding:5px; font-size:1.6em; }
+    .author{ font-weight:400; margin-bottom:10px; padding-left:5px; margin-left:10px; font-size:15px; color: #666; }
+    .date{ font-weight:400; margin-bottom:10px; padding-left:5px; margin-left:10px; font-size:15px; }
+    .tags{ display:flex; margin-left:15px; gap: 5px; margin-bottom: 20px; }
+    .tag{ color:white; border-radius:50px; font-weight:800; font-size:12px; padding:5px 10px; background:#007f9c; }
+    .content{ margin:10px; line-height: 1.8; }
+    .sc{ padding:5px; border-left:10px solid #007f9c; font-size:25px; margin-top: 20px; margin-bottom:10px; }
+    .sc2{ padding:5px; font-weight:400; border-bottom:2px solid #007f9c; font-size:20px; margin-top: 15px; margin-bottom:10px; }
+    pre{ border-radius:10px; background: #1e1e1e; padding: 15px; overflow-x: auto; }
+    code{ border-radius:5px; background: #f4f4f4; padding: 2px 5px; }
+    pre code{ background: transparent; padding: 0; }
+    blockquote { border-left: 4px solid #007f9c; margin: 20px 0; padding-left: 20px; color: #666; font-style: italic; }
+    hr { border: none; border-top: 2px solid #ddd; margin: 30px 0; }
+    .content p { margin: 15px 0; }
+    .content ul { margin: 15px 0; padding-left: 30px; }
+    .content li { margin: 8px 0; }
+    .back-btn { display: inline-block; margin: 20px 10px; padding: 10px 20px; background: #007f9c; color: white; text-decoration: none; border-radius: 5px; font-weight: 600; }
+    .back-btn:hover { background: #006080; }
+  </style>
+</head>
+<body>
+<div class="navbar">
+    <img src="/logo.svg" width="50em" height="50em"/>
+    <div></div>
+    <a href="/" class="active">ホーム</a>
+    <a href="#about">概要</a>
+  </div>
+  <div class="con">
+    <h1>CatBLOG - 記事表示</h1>
+  </div>
+  
+  <div class="container">
+    <a href="/" class="back-btn">← 一覧に戻る</a>
+    <div id="postContent">読み込み中...</div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script>
+    const postId = "{{ post_id }}";
+    
+    async function loadPost() {
+      try {
+        const response = await fetch(`/api/posts/${postId}`);
+        if (!response.ok) {
+          document.getElementById('postContent').innerHTML = '<p>記事が見つかりませんでした</p>';
+          return;
+        }
+        
+        const post = await response.json();
+        
+        document.getElementById('postContent').innerHTML = `
+          <h3 class="date">${new Date(post.timestamp).toLocaleString('ja-JP')}</h3>
+          <h1 class="title">${escapeHtml(post.title)}</h1>
+          <p class="author">投稿者: ${escapeHtml(post.author)}</p>
+          <div class="tags">
+            ${post.tags.map(tag => `<div class="tag">${escapeHtml(tag)}</div>`).join('')}
+          </div>
+          <div class="content">${post.html_content}</div>
+        `;
+        
+        hljs.highlightAll();
+      } catch (error) {
+        console.error('Error loading post:', error);
+        document.getElementById('postContent').innerHTML = '<p>記事の読み込みに失敗しました</p>';
+      }
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    loadPost();
+  </script>
+</body>
+</html>
