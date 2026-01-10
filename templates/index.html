@@ -64,28 +64,16 @@
     <div class="posts-list" id="postsList"></div>
   </div>
 
-  <script>
+ <script>
     async function loadPosts() {
       try {
-        const result = await window.storage.list('post:', true);
-        if (!result || !result.keys) {
+        const response = await fetch('/api/posts');
+        const posts = await response.json();
+        
+        if (!posts || posts.length === 0) {
           document.getElementById('postsList').innerHTML = '<p>まだ投稿がありません</p>';
           return;
         }
-        
-        const posts = [];
-        for (const key of result.keys) {
-          try {
-            const postResult = await window.storage.get(key, true);
-            if (postResult) {
-              posts.push(JSON.parse(postResult.value));
-            }
-          } catch (e) {
-            console.error('Error loading post:', e);
-          }
-        }
-        
-        posts.sort((a, b) => b.timestamp - a.timestamp);
         
         const postsHTML = posts.map(post => `
           <div class="post-card" onclick="location.href='/post/${post.id}'">
@@ -118,24 +106,31 @@
       }
       
       const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
-      const postId = 'post_' + Date.now();
-      const post = {
-        id: postId,
-        author,
-        title,
-        content,
-        tags,
-        timestamp: Date.now()
-      };
       
       try {
-        await window.storage.set(`post:${postId}`, JSON.stringify(post), true);
-        alert('投稿しました!');
-        document.getElementById('authorInput').value = '';
-        document.getElementById('titleInput').value = '';
-        document.getElementById('contentInput').value = '';
-        document.getElementById('tagsInput').value = '';
-        loadPosts();
+        const response = await fetch('/api/posts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            author,
+            title,
+            content,
+            tags
+          })
+        });
+        
+        if (response.ok) {
+          alert('投稿しました!');
+          document.getElementById('authorInput').value = '';
+          document.getElementById('titleInput').value = '';
+          document.getElementById('contentInput').value = '';
+          document.getElementById('tagsInput').value = '';
+          loadPosts();
+        } else {
+          alert('投稿に失敗しました');
+        }
       } catch (error) {
         console.error('Error saving post:', error);
         alert('投稿に失敗しました');
