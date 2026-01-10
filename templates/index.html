@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CatBLOG - みんなのブログ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+   body { margin: 0; padding:0; background:rgb(255, 255, 255); font-family: "Raleway", sans-serif; }
+    .navbar {
+      display:flex;
+      background: #000000;
+      align-items: center; 
+      border-bottom:1px solid #464646;
+    }
+    .navbar a{ color: white; text-decoration: none; margin: 0 1rem; font-weight:600; }
+    .navbar .active { margin-top:2px; padding:1em 0em; align-items: center; border-bottom:4px solid rgb(255, 255, 255); display:flex; }
+    .navbar div{ width:30px; }
+    .navbar img{ margin-left: 30px; margin-right:50px; margin-bottom:0px; margin-top:2px; }
+    .con{ background:#272727; }
+    .con h1{ font-family: "Raleway", sans-serif; color:white; font-size:1em; margin:0px; padding:10px; background:#292929; font-weight:600; }
+    .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
+    .write-section { background: #f5f5f5; padding: 30px; border-radius: 10px; margin-bottom: 40px; }
+    .write-section h2 { margin-top: 0; color: #007f9c; }
+    .input { outline:none; padding:12px; border:1px solid #323232; color:#000; background:#fff; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 5px; font-family: "Raleway", sans-serif; }
+    textarea.input { min-height: 200px; font-family: monospace; }
+    .btn { padding: 12px 30px; background: #007f9c; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 16px; }
+    .btn:hover { background: #006080; }
+    .posts-list { display: grid; gap: 20px; }
+    .post-card { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 20px; cursor: pointer; transition: transform 0.2s; }
+    .post-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .post-title { font-size: 1.5em; color: #007f9c; margin: 0 0 10px 0; }
+    .post-author { color: #666; font-size: 0.9em; margin-bottom: 10px; }
+    .post-preview { color: #333; line-height: 1.6; }
+    .post-date { color: #999; font-size: 0.85em; margin-top: 10px; }
+    .tags { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
+    .tag { color:white; border-radius:50px; width:fit-content; font-weight:800; font-size:12px; padding:5px 10px; background:#007f9c; }
+  </style>
+</head>
+<body>
+<div class="navbar">
+    <img src="/logo.svg" width="50em" height="50em"/>
+    <div></div>
+    <a href="/" class="active">ホーム</a>
+    <a href="#about">概要</a>
+  </div>
+  <div class="con">
+    <h1>CatBLOG - みんなで書けるブログ</h1>
+  </div>
+  
+  <div class="container">
+    <div class="write-section">
+      <h2>新しい記事を投稿</h2>
+      <input class="input" id="authorInput" placeholder="あなたの名前" />
+      <input class="input" id="titleInput" placeholder="記事のタイトル" />
+      <input class="input" id="tagsInput" placeholder="タグ (カンマ区切り)" />
+      <textarea class="input" id="contentInput" placeholder="Markdownで記事を書く..."></textarea>
+      <button class="btn" onclick="publishPost()">投稿する</button>
+    </div>
+    
+    <h2>最近の投稿</h2>
+    <div class="posts-list" id="postsList"></div>
+  </div>
+
+  <script>
+    async function loadPosts() {
+      try {
+        const result = await window.storage.list('post:', true);
+        if (!result || !result.keys) {
+          document.getElementById('postsList').innerHTML = '<p>まだ投稿がありません</p>';
+          return;
+        }
+        
+        const posts = [];
+        for (const key of result.keys) {
+          try {
+            const postResult = await window.storage.get(key, true);
+            if (postResult) {
+              posts.push(JSON.parse(postResult.value));
+            }
+          } catch (e) {
+            console.error('Error loading post:', e);
+          }
+        }
+        
+        posts.sort((a, b) => b.timestamp - a.timestamp);
+        
+        const postsHTML = posts.map(post => `
+          <div class="post-card" onclick="location.href='/post/${post.id}'">
+            <h3 class="post-title">${escapeHtml(post.title)}</h3>
+            <p class="post-author">投稿者: ${escapeHtml(post.author)}</p>
+            <p class="post-preview">${escapeHtml(post.content.substring(0, 150))}...</p>
+            <div class="tags">
+              ${post.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+            </div>
+            <p class="post-date">${new Date(post.timestamp).toLocaleString('ja-JP')}</p>
+          </div>
+        `).join('');
+        
+        document.getElementById('postsList').innerHTML = postsHTML;
+      } catch (error) {
+        console.error('Error loading posts:', error);
+        document.getElementById('postsList').innerHTML = '<p>投稿の読み込みに失敗しました</p>';
+      }
+    }
+    
+    async function publishPost() {
+      const author = document.getElementById('authorInput').value.trim();
+      const title = document.getElementById('titleInput').value.trim();
+      const content = document.getElementById('contentInput').value.trim();
+      const tagsInput = document.getElementById('tagsInput').value.trim();
+      
+      if (!author || !title || !content) {
+        alert('名前、タイトル、内容を入力してください');
+        return;
+      }
+      
+      const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+      const postId = 'post_' + Date.now();
+      const post = {
+        id: postId,
+        author,
+        title,
+        content,
+        tags,
+        timestamp: Date.now()
+      };
+      
+      try {
+        await window.storage.set(`post:${postId}`, JSON.stringify(post), true);
+        alert('投稿しました!');
+        document.getElementById('authorInput').value = '';
+        document.getElementById('titleInput').value = '';
+        document.getElementById('contentInput').value = '';
+        document.getElementById('tagsInput').value = '';
+        loadPosts();
+      } catch (error) {
+        console.error('Error saving post:', error);
+        alert('投稿に失敗しました');
+      }
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    loadPosts();
+  </script>
+</body>
+</html>
