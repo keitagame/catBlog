@@ -1,5 +1,6 @@
 import re
 import os
+from flask import Flask, render_template, request, jsonify  # jsonifyを追加
 from datetime import datetime
 posts_storage = {}
 class SimpleMarkdown:
@@ -111,7 +112,7 @@ class SimpleMarkdown:
     def escape_html(self, text):
         return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
-from flask import Flask, render_template
+
 app = Flask(__name__)
 @app.route("/")
 def index():
