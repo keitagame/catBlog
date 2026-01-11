@@ -117,7 +117,10 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template("index.html")
-
+@app.route("/logo.svg")
+def logo():
+    return render_template("logo.svg")
+    
 @app.route("/post/<post_id>")
 def view_post(post_id):
     return render_template("view_post.html", post_id=post_id)
